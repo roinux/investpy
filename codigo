@@ -1,0 +1,85 @@
+# **PAPÉIS ESPECÍFICOS**
+
+# !pip install numpy
+# !pip install pandas
+# !pip install matplotlib.pyplot
+ 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import investpy
+
+# Criando o objeto que busca o resultado no site investing.com com a biblioteca investpy
+# Pesquisando Ações: PETR
+
+acoes = investpy.search_quotes(text = 'PETR', products = ['stocks'], countries = ['brazil'], n_results = 50)
+
+# Para buscar todos os resultados possíveis com PETR
+
+for resultado in acoes:
+  print(resultado)
+
+# Para buscar todos os resultados possíveis com PETR no texto
+# Entre colchetes = item 1, exceto o 2. (Indexação em python começa em 0)
+
+for resultado in acoes[1:2]:
+  print(resultado)
+
+# Buscando dados de um período e salvando num objeto
+petr = resultado.retrieve_historical_data (from_date = '01/06/2022', to_date = '30/06/2022')
+
+# OHLC = OPEN, HIGH, LOW, CLOSE
+petr.head()
+
+petr.plot()
+
+petr['Close'].plot()
+
+petr['High'].plot()
+
+# Pesquisando um FII (Fundos Imobiliários): HGLG
+
+fii = investpy.search_quotes(text = 'hglg', products = ['stocks'], countries = ['brazil'], n_results = 50)
+
+for resultado2 in fii:
+  print(resultado2)
+
+  hglg = resultado2.retrieve_historical_data (from_date = '01/07/2022', to_date = '20/07/2022')
+
+  hglg['Close'].plot()
+
+hglg['Volume'].plot()
+
+## **ÍNDICES**
+
+# Pesquisando o IBOV
+# No campo products, informar indices, sem acento
+
+index = investpy.search_quotes(text = 'ibov', products = ['indices'], countries = ['brazil'], n_results = 50)
+
+for resultado3 in index:
+  print(resultado3)
+
+
+# Filtrando o item desejado
+
+for resultado4 in index[:1]:
+  print(resultado4)
+
+# **ETF**
+
+# Com ETF a biblioteca investpy só reconhece o nome e não o ticker
+# É preciso informar o nome exato do ETF, exemplo: BOVA11 = ishares ibovespa
+
+search_etf = investpy.get_etf_historical_data(etf='ishares ibovespa', country='brazil', from_date='01/07/2022', to_date='29/07/2022')
+
+# Filtrando o item desejado
+
+bova = investpy.search_quotes(text = 'bova', products = ['etfs'], countries = ['brazil'], n_results = 50)
+
+for resultado5 in bova:
+  print(resultado5)
+
+# dataframe
+
+df = resultado5.retrieve_historical_data(from_date='01/07/2022', to_date='29/07/2022')
